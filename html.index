@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Love You Jay Cinta ♥️😍</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+    cursor: pointer;
+  }
+
+  /* ---------- Animated gradient background ---------- */
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(-45deg, #1a0033, #4b0082, #ff1493, #ff69b4, #1a0033);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    user-select: none;
+  }
+
+  @keyframes gradientMove {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ---------- Big pulsing heart ---------- */
+  .big-heart {
+    font-size: clamp(60px, 14vw, 130px);
+    animation: beat 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(255, 20, 147, 0.9));
+    z-index: 2;
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    15%      { transform: scale(1.25); }
+    30%      { transform: scale(1); }
+    45%      { transform: scale(1.18); }
+    60%      { transform: scale(1); }
+  }
+
+  /* ---------- Typing text ---------- */
+  .message {
+    margin-top: 18px;
+    font-size: clamp(22px, 5.5vw, 58px);
+    font-weight: 700;
+    text-align: center;
+    padding: 0 16px;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow:
+      0 0 8px #fff,
+      0 0 18px #ff69b4,
+      0 0 34px #ff1493,
+      0 0 60px #ff1493;
+    min-height: 1.3em;
+    z-index: 2;
+  }
+
+  /* blinking cursor */
+  .message::after {
+    content: '|';
+    margin-left: 4px;
+    animation: blink 0.8s step-end infinite;
+  }
+  .message.done::after { content: ''; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+
+  /* ---------- Subtitle ---------- */
+  .subtitle {
+    margin-top: 22px;
+    font-size: clamp(13px, 2.4vw, 20px);
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+    z-index: 2;
+  }
+  .subtitle.show { opacity: 1; }
+
+  /* ---------- Floating hearts ---------- */
+  .float-heart {
+    position: fixed;
+    bottom: -60px;
+    font-size: 24px;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+    z-index: 1;
+    opacity: 0.9;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(0.6);
+      opacity: 0;
+    }
+    10% { opacity: 1; }
+    100% {
+      transform: translateY(-115vh) rotate(360deg) scale(1.2);
+      opacity: 0;
+    }
+  }
+
+  /* ---------- Click burst hearts ---------- */
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    z-index: 5;
+    animation: burstOut 0.9s ease-out forwards;
+  }
+
+  @keyframes burstOut {
+    0% {
+      transform: translate(-50%, -50%) scale(0.4);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--x), var(--y)) scale(1.6) rotate(var(--r));
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="big-heart">❤️</div>
+  <div class="message" id="typed"></div>
+  <div class="subtitle" id="sub">Jay Cinta — my forever ♥️</div>
+
+<script>
+  /* =========================================================
+     1) TYPING EFFECT
+     Array.from() is used so emojis (♥️😍) don't break apart.
+  ========================================================= */
+  const message = "I love you Jay Cinta ♥️😍";
+  const chars   = Array.from(message);
+  const typedEl = document.getElementById('typed');
+  const subEl   = document.getElementById('sub');
+
+  let index = 0;
+
+  function typeNext() {
+    if (index < chars.length) {
+      typedEl.textContent += chars[index];
+      index++;
+
+      // Random speed for a natural typing feel
+      const delay = 90 + Math.random() * 90;
+      setTimeout(typeNext, delay);
+    } else {
+      typedEl.classList.add('done');
+      subEl.classList.add('show');
+      heartRain(40);          // celebrate!
+    }
+  }
+
+  setTimeout(typeNext, 700);
+
+
+  /* =========================================================
+     2) FLOATING HEARTS (background rain)
+  ========================================================= */
+  const EMOJIS = ['❤️', '💖', '💕', '💗', '💓', '😍', '💘', '🌹'];
+
+  function createFloatHeart() {
+    const h = document.createElement('div');
+    h.className = 'float-heart';
+    h.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (16 + Math.random() * 28) + 'px';
+
+    const duration = 6 + Math.random() * 7;
+    h.style.animationDuration = duration + 's';
+
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), duration * 1000);
+  }
+
+  // Spawn hearts continuously
+  setInterval(createFloatHeart, 380);
+
+  // Burst of many hearts at once
+  function heartRain(count) {
+    for (let i = 0; i < count; i++) {
+      setTimeout(createFloatHeart, i * 60);
+    }
+  }
+
+
+  /* =========================================================
+     3) CLICK / TAP BURST
+  ========================================================= */
+  function burst(x, y) {
+    const total = 12;
+
+    for (let i = 0; i < total; i++) {
+      const p = document.createElement('div');
+      p.className = 'burst';
+      p.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+
+      const angle = (Math.PI * 2 * i) / total + Math.random() * 0.5;
+      const dist  = 70 + Math.random() * 110;
+
+      p.style.left = x + 'px';
+      p.style.top  = y + 'px';
+      p.style.setProperty('--x', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--y', Math.sin(angle) * dist + 'px');
+      p.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
+
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 950);
+    }
+  }
+
+  document.addEventListener('click', e => burst(e.clientX, e.clientY));
+  document.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    burst(t.clientX, t.clientY);
+  }, { passive: true });
+
+
+  /* =========================================================
+     4) BONUS: title heartbeat in the browser tab
+  ========================================================= */
+  const titles = [
+    "I love you Jay Cinta ♥️",
+    "💖 Jay Cinta 💖",
+    "😍 I love you 😍"
+  ];
+  let tIndex = 0;
+  setInterval(() => {
+    document.title = titles[tIndex];
+    tIndex = (tIndex + 1) % titles.length;
+  }, 1800);
+</script>
+</body>
+</html>
